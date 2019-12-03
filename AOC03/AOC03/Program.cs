@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AOC03
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var input = File.ReadAllText("input.txt").Split('\n').ToList().ConvertAll(a => a.Split(','));
             var s = Stopwatch.StartNew();
