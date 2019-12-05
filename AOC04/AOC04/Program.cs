@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,13 @@ namespace AOC04
     {
         static void Main()
         {
-            var input = File.ReadAllText("input.txt");
-
+            var s = Stopwatch.StartNew();
             var possible = new List<int>();
+            var range = (146810, 612564);
 
-            for (var i = 146811; i < 612564; i++)
+            for (var i = range.Item1 + 1; i < range.Item2; i++)
             {
-                var n = i.ToString().ToCharArray().ToList().ConvertAll(a => int.Parse(a.ToString()));
+                var n = i.ToString().Select(d => int.Parse(d.ToString())).ToList();
                 var p = 0;
                 foreach (var j in n)
                 {
@@ -29,34 +30,30 @@ namespace AOC04
                     p = j;
                 }
 
-                var dupes = n.Count != n.Distinct().Count();
-
-                if (dupes)
+                var t = new Dictionary<int, int>();
+                foreach (var l in n)
                 {
-                    var t = new Dictionary<int, int>();
-                    foreach (var l in n)
+                    if (t.ContainsKey(l))
                     {
-                        if (t.ContainsKey(l))
-                        {
-                            t[l] = t[l] + 1;
-                        }
-                        else
-                        {
-                            t.Add(l, 1);
-                        }
+                        t[l] = t[l] + 1;
                     }
-
-                    if (t.ContainsValue(2))
+                    else
                     {
-
-                        possible.Add(int.Parse(n[0].ToString() + n[1].ToString() + n[2].ToString() + n[3].ToString() + n[4].ToString() + n[5].ToString()));
+                        t.Add(l, 1);
                     }
+                }
+
+                if (t.ContainsValue(2))
+                {
+                    possible.Add(int.Parse(n[0].ToString() + n[1].ToString() + n[2].ToString() + n[3].ToString() + n[4].ToString() + n[5].ToString()));
                 }
 
                 a:;
             }
+            s.Stop();
 
             Console.WriteLine(possible.Count);
+            Console.WriteLine(s.ElapsedMilliseconds + "ms elapsed.");
             Console.Read();
         }
     }
