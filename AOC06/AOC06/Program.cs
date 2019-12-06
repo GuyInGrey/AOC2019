@@ -15,26 +15,32 @@ namespace AOC06
             var input = File.ReadAllText("input.txt");
             var lines = input.Split('\n');
 
-            var s = Stopwatch.StartNew();
             var orbits = lines.ToList().ConvertAll(a => a.Split(')').ToList().ConvertAll(b => b.Trim()));
 
             var COM = new Node() { ID = "COM", Parent = null };
             GetOrbits(COM, orbits);
-            s.Stop();
 
             Console.WriteLine("Enter first ID.");
-            var id1 = Console.ReadLine();
+            //var id1 = Console.ReadLine();
+            var id1 = "YOU";
             Console.WriteLine("Enter second ID.");
-            var id2 = Console.ReadLine();
+            //var id2 = Console.ReadLine();
+            var id2 = "SAN";
 
-            s.Start();
-            var one = SearchForNode(COM, id1);
-            var two = SearchForNode(COM, id2);
-            var d = Distance(one, two) - 2;
-            Console.WriteLine("Distance: " + d);
-            Console.WriteLine("Total Direct And Indirect: " + Node.TotalChildren(COM));
-            s.Stop();
-            Console.WriteLine("Took " + s.ElapsedMilliseconds + " milliseconds.");
+            var counts = new List<long>();
+
+            for (var i = 0; i < 1000; i++)
+            {
+                var s = Stopwatch.StartNew();
+                var one = SearchForNode(COM, id1);
+                var two = SearchForNode(COM, id2);
+                var d = Distance(one, two) - 2;
+                //Console.WriteLine("Distance: " + d);
+                //Console.WriteLine("Total Direct And Indirect: " + Node.TotalChildren(COM));
+                s.Stop();
+                counts.Add(s.ElapsedMilliseconds);
+            }
+            Console.WriteLine("Took " + counts.Average() + " milliseconds.");
             Console.Read();
         }
 

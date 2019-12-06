@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,12 +10,19 @@ namespace AOC02
     {
         static void Main(string[] args)
         {
-            var input = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => int.Parse(a)).ToArray();
-            var s = Stopwatch.StartNew();
-            ParseIntCode2(input);
-            s.Stop();
+            var inputOriginal = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => int.Parse(a)).ToArray();
 
-            Console.WriteLine("Finished. Took " + s.ElapsedMilliseconds + " milliseconds.");
+            var counts = new List<long>();
+
+            for (var i = 0; i < 10000; i++)
+            {
+                var s = Stopwatch.StartNew();
+                ParseIntCode2((int[])inputOriginal.Clone());
+                s.Stop();
+                counts.Add(s.ElapsedMilliseconds);
+            }
+
+            Console.WriteLine("Finished. Took " + counts.Average() + " milliseconds.");
             Console.Read();
         }
 
@@ -55,11 +63,11 @@ namespace AOC02
                         break;
                     case 3:
                         //input[input[instructionPointer + 1]] = int.Parse(Console.ReadLine());
-                        input[input[instructionPointer + 1]] = int.Parse("5");
+                        input[input[instructionPointer + 1]] = int.Parse("1");
                         instructionPointer += 2;
                         break;
                     case 4:
-                        Console.WriteLine("Output: " + GetParameter(0));
+                        //Console.WriteLine("Output: " + GetParameter(0));
                         instructionPointer += 2;
                         break;
                     case 5:
