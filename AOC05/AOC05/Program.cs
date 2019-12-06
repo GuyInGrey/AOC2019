@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -9,9 +10,11 @@ namespace AOC02
         static void Main(string[] args)
         {
             var input = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => int.Parse(a)).ToArray();
+            var s = Stopwatch.StartNew();
             ParseIntCode2(input);
+            s.Stop();
 
-            Console.WriteLine("Finished.");
+            Console.WriteLine("Finished. Took " + s.ElapsedMilliseconds + " milliseconds.");
             Console.Read();
         }
 
@@ -51,7 +54,8 @@ namespace AOC02
                         instructionPointer += 4;
                         break;
                     case 3:
-                        input[input[instructionPointer + 1]] = int.Parse(Console.ReadLine());
+                        //input[input[instructionPointer + 1]] = int.Parse(Console.ReadLine());
+                        input[input[instructionPointer + 1]] = int.Parse("5");
                         instructionPointer += 2;
                         break;
                     case 4:
