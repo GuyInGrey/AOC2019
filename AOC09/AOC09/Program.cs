@@ -11,24 +11,28 @@ namespace AOC09
         static void Main()
         {
             var program = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => long.Parse(a.Trim()));
-            var comp = new IntcodeComputer(program.ToArray(), 2);
+            var output = new List<long>();
 
             var benchmark = Stopwatch.StartNew();
 
-            var output = new List<long>();
-            var val = (long)0;
-            while (val != long.MaxValue)
+            for (var i = 0; i < 100; i++)
             {
-                val = comp.Parse();
-                if (val != long.MaxValue)
+                var comp = new IntcodeComputer((long[])program.ToArray().Clone(), 2);
+                output.Clear();
+                var val = (long)0;
+                while (val != long.MaxValue)
                 {
-                    output.Add(val);
+                    val = comp.Parse();
+                    if (val != long.MaxValue)
+                    {
+                        output.Add(val);
+                    }
                 }
             }
 
             benchmark.Stop();
 
-            Console.WriteLine("Terminated. Took " + benchmark.ElapsedMilliseconds + " ms. Output: " + string.Join(", ", output));
+            Console.WriteLine("Terminated. Took " + (benchmark.ElapsedMilliseconds/100) + " ms average. Output: " + string.Join(", ", output));
             Console.Read();
         }
     }
