@@ -46,17 +46,20 @@ namespace AOC09
                         var a = GetParameter(0, false);
                         var b = GetParameter(1, false);
                         var c = GetParameter(2, true);
+                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + a + " " + b + " " + c);
                         SetToMemory(c, a + b);
                         instructionPointer += 4;
                         break;
                     case 2:
                         a = GetParameter(0, false);
                         b = GetParameter(1, false);
-                        c = GetFromMemory(instructionPointer + 3);
+                        c = GetParameter(2, true);
+                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + a + " " + b + " " + c);
                         SetToMemory(c, a * b);
                         instructionPointer += 4;
                         break;
                     case 3:
+                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + GetParameter(0, true) + " " + Inputs[0]);
                         SetToMemory(GetParameter(0, true), Inputs[0]);
                         Inputs.RemoveAt(0);
                         instructionPointer += 2;
@@ -84,11 +87,11 @@ namespace AOC09
                         }
                         break;
                     case 7:
-                        SetToMemory(GetFromMemory(instructionPointer + 3), GetParameter(0, false) < GetParameter(1, false) ? 1 : 0);
+                        SetToMemory(GetParameter(2, true), GetParameter(0, false) < GetParameter(1, false) ? 1 : 0);
                         instructionPointer += 4;
                         break;
                     case 8:
-                        SetToMemory(GetFromMemory(instructionPointer + 3), GetParameter(0, false) == GetParameter(1, false) ? 1 : 0);
+                        SetToMemory(GetParameter(2, true), GetParameter(0, false) == GetParameter(1, false) ? 1 : 0);
                         instructionPointer += 4;
                         break;
                     case 99:
@@ -115,6 +118,7 @@ namespace AOC09
                 {
                     if (Program.ContainsKey(index)) { Program[index] = value; }
                     else { Program.Add(index, value); }
+                    if (index < 0) { Console.WriteLine("Invalid address: " + index);  }
                 }
 
                 //Gets a value from memory based on the given parameter mode and parameter index.
