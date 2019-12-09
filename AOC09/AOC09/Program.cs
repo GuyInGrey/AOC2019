@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AOC09
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var program = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => long.Parse(a.Trim())).ToArray();
-            var val = (long)0;
-            var comp = new IntcodeComputer((long[])program.Clone());
-            comp.Inputs.Add(2);
+            var program = File.ReadAllText("input.txt").Split(',').ToList().ConvertAll(a => long.Parse(a.Trim()));
+            var comp = new IntcodeComputer(program.ToArray(), 2);
+
+            var benchmark = Stopwatch.StartNew();
+
             var output = new List<long>();
-            var s = Stopwatch.StartNew();
+            var val = (long)0;
             while (val != long.MaxValue)
             {
                 val = comp.Parse();
@@ -26,9 +25,10 @@ namespace AOC09
                     output.Add(val);
                 }
             }
-            s.Stop();
 
-            Console.WriteLine("Terminated. Took " + s.ElapsedMilliseconds + " ms. Output: " + string.Join(", ", output));
+            benchmark.Stop();
+
+            Console.WriteLine("Terminated. Took " + benchmark.ElapsedMilliseconds + " ms. Output: " + string.Join(", ", output));
             Console.Read();
         }
     }

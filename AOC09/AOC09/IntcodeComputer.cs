@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AOC09
 {
@@ -10,10 +8,9 @@ namespace AOC09
     {
         public Dictionary<long, long> Program;
         public long instructionPointer = -2;
-        public List<int> Inputs;
+        public List<long> Inputs;
         public long RelativeBase = 0;
         public List<long> ExecutedOpcodes = new List<long>();
-        public List<long> PointersWhereRelativeBaseWasTouched = new List<long>();
 
         public IntcodeComputer(long[] program)
         {
@@ -24,7 +21,12 @@ namespace AOC09
                 Program.Add(i, p);
                 i++;
             }
-            Inputs = new List<int>();
+            Inputs = new List<long>();
+        }
+
+        public IntcodeComputer(long[] program, params long[] input) : this(program)
+        {
+            Inputs = input.ToList();
         }
 
         public long Parse()
@@ -46,7 +48,6 @@ namespace AOC09
                         var a = GetParameter(0, false);
                         var b = GetParameter(1, false);
                         var c = GetParameter(2, true);
-                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + a + " " + b + " " + c);
                         SetToMemory(c, a + b);
                         instructionPointer += 4;
                         break;
@@ -54,12 +55,10 @@ namespace AOC09
                         a = GetParameter(0, false);
                         b = GetParameter(1, false);
                         c = GetParameter(2, true);
-                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + a + " " + b + " " + c);
                         SetToMemory(c, a * b);
                         instructionPointer += 4;
                         break;
                     case 3:
-                        //Console.WriteLine(instructionPointer + ": " + opcode + " " + GetParameter(0, true) + " " + Inputs[0]);
                         SetToMemory(GetParameter(0, true), Inputs[0]);
                         Inputs.RemoveAt(0);
                         instructionPointer += 2;
@@ -98,7 +97,6 @@ namespace AOC09
                         return long.MaxValue; // MaxValue signifies the program's end.
                     case 9:
                         RelativeBase += GetParameter(0, false);
-                        PointersWhereRelativeBaseWasTouched.Add(instructionPointer);
                         instructionPointer += 2;
                         break;
                     default:
@@ -121,7 +119,6 @@ namespace AOC09
                     if (index < 0) { Console.WriteLine("Invalid address: " + index);  }
                 }
 
-                //Gets a value from memory based on the given parameter mode and parameter index.
                 long GetParameter(long i, bool writeParameter)
                 {
                     if (modes[(int)i] == 0 && !writeParameter)
