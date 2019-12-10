@@ -41,21 +41,23 @@ namespace AOC10
             newAsteroids.Sort((a, b) => b.Item2.CompareTo(a.Item2));
             var bestAsteroid = newAsteroids[0].Item1;
             asteroids.Remove(bestAsteroid);
-            Console.WriteLine("Best Asteroid: " + bestAsteroid);
 
             //Get angles from best asteroid to all others
             newAsteroids.Clear();
             for (var i = 0; i < asteroids.Count; i++)
             {
                 var angle = bestAsteroid.AngleTo(asteroids[i]);
-                newAsteroids.Add((asteroids[i], asteroids[i].Y == bestAsteroid.Y && angle > 6.2f ? 0 : angle));
+                //angle = asteroids[i].Y == bestAsteroid.Y && angle > 3.14f ? -3.14f : angle;
+                //angle = angle < (Math.PI / 2) ? angle + (float)Math.PI : angle;
+                angle = angle < 0 ? angle + ((float)Math.PI * 2) : angle;
+                newAsteroids.Add((asteroids[i], angle));
             }
             newAsteroids.Sort((a, b) => b.Item2.CompareTo(a.Item2));
             newAsteroids.Reverse();
 
             //Vaporize Asteroids one by one :D BY GIANT LAZERZ
             var removedOrder = new List<(Vector2, float)>();
-            var lastRemoved = (Vector2.Zero, 0f);
+            var lastRemoved = (Vector2.Zero, 100f);
             while (newAsteroids.Count > 0)
             {
                 var current = newAsteroids[0];
@@ -69,7 +71,8 @@ namespace AOC10
                 }
                 else
                 {
-                    if (newAsteroids[0].Item2 == newAsteroids.Last().Item2)
+                    //if (newAsteroids[0].Item2 == newAsteroids.Last().Item2)
+                    if (newAsteroids.All(a => a.Item2 == newAsteroids[0].Item2))
                     {
                         Console.WriteLine("Blasted " + current.Item1);
                         lastRemoved = current;
@@ -83,9 +86,12 @@ namespace AOC10
                     }
                 }
             }
+
+            Console.WriteLine("Best Asteroid: " + bestAsteroid);
+
             var last = removedOrder.Last();
-            //var num = (removedOrder[199].Item1.X * 100) + removedOrder[199].Item1.Y;
-            //Console.WriteLine(num);
+            var num = (removedOrder[199].Item1.X * 100) + removedOrder[199].Item1.Y;
+            Console.WriteLine(num);
 
             Console.Read();
         }
@@ -108,7 +114,7 @@ namespace AOC10
             AngleTo(this, b);
 
         public static float AngleTo(Vector2 a, Vector2 b) =>
-            (float)(Math.Atan2(a.Y - b.Y, b.X - a.X) + Math.PI);
+            (float)(Math.Atan2(b.X - a.X, a.Y - b.Y));
 
         public override bool Equals(object obj) =>
             obj is Vector2 b ? X == b.X && Y == b.Y : false;
