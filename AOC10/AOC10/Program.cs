@@ -22,7 +22,7 @@ namespace AOC10
                     }
                 }
             }
-            // Get number of visible asteroids from each asteroid
+            // Get number of visible asteroids from each asteroid, get best asteroid
             var newAsteroids = new List<(Vector2, float)>(); 
             for (var i = 0; i < asteroids.Count; i++)
             {
@@ -54,6 +54,26 @@ namespace AOC10
             }
             newAsteroids.Sort((a, b) => b.Item2.CompareTo(a.Item2));
             newAsteroids.Reverse();
+
+            //Correctly sort asteroids with same angle
+            var changes = -1;
+            while (changes != 0)
+            {
+                changes = 0;
+                for (var i = 0; i < newAsteroids.Count - 1; i++)
+                {
+                    var a = newAsteroids[i];
+                    var b = newAsteroids[i + 1];
+                    if (a.Item2 == b.Item2)
+                    {
+                        if (b.Item1.DistanceFrom(bestAsteroid) < a.Item1.DistanceFrom(bestAsteroid))
+                        {
+                            newAsteroids = newAsteroids.Swap(i, i + 1).ToList();
+                            changes++;
+                        }
+                    }
+                }
+            }
 
             //Vaporize Asteroids one by one :D BY GIANT LAZERZ
             var removedOrder = new List<(Vector2, float)>();
@@ -111,10 +131,16 @@ namespace AOC10
         }
 
         public float AngleTo(Vector2 b) =>
-            AngleTo(this, b);
+            Angle(this, b);
 
-        public static float AngleTo(Vector2 a, Vector2 b) =>
+        public float DistanceFrom(Vector2 b) =>
+            Distance(this, b);
+
+        public static float Angle(Vector2 a, Vector2 b) =>
             (float)(Math.Atan2(b.X - a.X, a.Y - b.Y));
+
+        public static float Distance(Vector2 a, Vector2 b) =>
+            (float)Math.Sqrt(Math.Pow(b.X-a.X, 2) + Math.Pow(b.Y - a.Y, 2));
 
         public override bool Equals(object obj) =>
             obj is Vector2 b ? X == b.X && Y == b.Y : false;
