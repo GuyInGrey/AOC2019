@@ -15,7 +15,7 @@ namespace AOC09
 
             var benchmark = Stopwatch.StartNew();
 
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 50; i++)
             {
                 var comp = new IntcodeComputer((long[])program.ToArray().Clone(), 2);
                 output.Clear();
