@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace AOC10
 {
@@ -75,29 +76,47 @@ namespace AOC10
                 }
             }
 
+            for (var y = 0; y < input.Length; y++)
+            {
+                for (var x = 0; x < input[y].Length; x++)
+                {
+                    Console.SetCursorPosition(x, y);
+                    Console.Write('.');
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            foreach (var a in asteroids)
+            {
+                Console.SetCursorPosition((int)a.X, (int)a.Y);
+                Console.Write("#");
+            }
+
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.SetCursorPosition((int)bestAsteroid.X, (int)bestAsteroid.Y);
+            Console.Write('#');
+
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.ReadLine();
             //Vaporize Asteroids one by one :D BY GIANT LAZERZ
             var removedOrder = new List<(Vector2, float)>();
             var lastRemoved = (Vector2.Zero, 100f);
+            var destroyedCnt = 0;
             while (newAsteroids.Count > 0)
             {
+                var blasted = false;
                 var current = newAsteroids[0];
                 if (current.Item2 != lastRemoved.Item2)
                 {
-                    a:;
-                    Console.WriteLine("Blasted " + current.Item1);
-                    lastRemoved = current;
-                    removedOrder.Add(current);
-                    newAsteroids.RemoveAt(0);
+                    blasted = true;
                 }
                 else
                 {
                     //if (newAsteroids[0].Item2 == newAsteroids.Last().Item2)
                     if (newAsteroids.All(a => a.Item2 == newAsteroids[0].Item2))
                     {
-                        Console.WriteLine("Blasted " + current.Item1);
-                        lastRemoved = current;
-                        removedOrder.Add(current);
-                        newAsteroids.RemoveAt(0);
+                        blasted = true;
                     }
                     else
                     {
@@ -105,13 +124,30 @@ namespace AOC10
                         newAsteroids.Add(current);
                     }
                 }
+
+                if (blasted)
+                {
+                    lastRemoved = current;
+                    removedOrder.Add(current);
+                    newAsteroids.RemoveAt(0);
+                    destroyedCnt++;
+                    Console.SetCursorPosition((int)current.Item1.X, (int)current.Item1.Y);
+                    Console.Write('O');
+                }
+
+                Thread.Sleep(25);
             }
 
-            Console.WriteLine("Best Asteroid: " + bestAsteroid);
+            Console.SetCursorPosition(0, input.Length + 2);
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.WriteLine("Best Asteroid For Visibility: " + bestAsteroid);
 
             var last = removedOrder.Last();
             var num = (removedOrder[199].Item1.X * 100) + removedOrder[199].Item1.Y;
-            Console.WriteLine(num);
+            Console.WriteLine("Part 2 Answer: " + num);
+            Console.WriteLine("Grid Size: " + input.Length + "x" + input[0].Length);
+            Console.WriteLine("Asteroids destroyed: " + destroyedCnt);
 
             Console.Read();
         }
