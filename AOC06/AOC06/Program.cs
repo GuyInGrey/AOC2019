@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AOC06
@@ -21,22 +22,22 @@ namespace AOC06
             GetOrbits(COM, orbits);
 
             Console.WriteLine("Enter first ID.");
-            //var id1 = Console.ReadLine();
-            var id1 = "YOU";
+            var id1 = Console.ReadLine();
+            //var id1 = "YOU";
             Console.WriteLine("Enter second ID.");
-            //var id2 = Console.ReadLine();
-            var id2 = "SAN";
+            var id2 = Console.ReadLine();
+            //ar id2 = "SAN";
 
             var counts = new List<long>();
 
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 1; i++)
             {
                 var s = Stopwatch.StartNew();
                 var one = SearchForNode(COM, id1);
                 var two = SearchForNode(COM, id2);
                 var d = Distance(one, two) - 2;
-                //Console.WriteLine("Distance: " + d);
-                //Console.WriteLine("Total Direct And Indirect: " + Node.TotalChildren(COM));
+                Console.WriteLine("Distance: " + d);
+                Console.WriteLine("Total Direct And Indirect: " + Node.TotalChildren(COM));
                 s.Stop();
                 counts.Add(s.ElapsedMilliseconds);
             }
@@ -83,7 +84,8 @@ namespace AOC06
 
         public static int Search(int depth, Node a, Node b, List<Node> Searched)
         {
-            //Console.WriteLine("Search: a is " + a.ID + "; Relatives are: " + string.Join(",", a.Relatives));
+            Console.WriteLine("Search: a is " + a.ID + "; Relatives are: " + string.Join(",", a.Relatives));
+            Thread.Sleep(25);
             NodesChecked++;
             foreach (var r in a.Relatives)
             {

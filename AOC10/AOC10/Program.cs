@@ -10,6 +10,9 @@ namespace AOC10
     {
         public static void Main()
         {
+            start:;
+            Console.Clear();
+
             //Get Asteroid Position List From Input
             var asteroids = new List<Vector2>();
             var input = File.ReadAllText("input.txt").Split('\n').ToList().ConvertAll(a => a.ToCharArray()).ToArray();
@@ -23,6 +26,9 @@ namespace AOC10
                     }
                 }
             }
+
+            Console.SetWindowSize(input[0].Length + 2, input.Length + 8);
+
             // Get number of visible asteroids from each asteroid, get best asteroid
             var newAsteroids = new List<(Vector2, float)>(); 
             for (var i = 0; i < asteroids.Count; i++)
@@ -76,6 +82,7 @@ namespace AOC10
                 }
             }
 
+            //Visualization Stuff
             for (var y = 0; y < input.Length; y++)
             {
                 for (var x = 0; x < input[y].Length; x++)
@@ -98,7 +105,6 @@ namespace AOC10
 
             Console.ForegroundColor = ConsoleColor.Red;
 
-            Console.ReadLine();
             //Vaporize Asteroids one by one :D BY GIANT LAZERZ
             var removedOrder = new List<(Vector2, float)>();
             var lastRemoved = (Vector2.Zero, 100f);
@@ -131,11 +137,12 @@ namespace AOC10
                     removedOrder.Add(current);
                     newAsteroids.RemoveAt(0);
                     destroyedCnt++;
+                    //More Visualization
                     Console.SetCursorPosition((int)current.Item1.X, (int)current.Item1.Y);
                     Console.Write('O');
                 }
 
-                Thread.Sleep(25);
+                Thread.Sleep(5);
             }
 
             Console.SetCursorPosition(0, input.Length + 2);
@@ -150,6 +157,7 @@ namespace AOC10
             Console.WriteLine("Asteroids destroyed: " + destroyedCnt);
 
             Console.Read();
+            //goto start;
         }
     }
 
