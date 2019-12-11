@@ -54,7 +54,7 @@ namespace AOC11
                 {
                     var tPos = t.Key;
                     Console.SetCursorPosition(tPos.Item1 - xMin + 1, -(tPos.Item2 - yMin + 1) - (yMin * 2));
-                    Console.Write("#");
+                    Console.Write("█");
                 }
             }
 
