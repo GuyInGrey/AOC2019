@@ -26,11 +26,9 @@ namespace AOC13
                 var joystick = 0;
                 var running = true;
 
-                var previous = (0, 0);
                 var ballPos = (0, 0);
                 var paddlePos = (0, 0);
 
-                var first = true;
                 var delay = 5;
 
                 Task.Run(new Action(() =>
@@ -99,17 +97,7 @@ namespace AOC13
 
                             if (var3 == 4)
                             {
-                                if (!first)
-                                {
-                                    previous = ballPos;
-                                    ballPos = ((int)var1, (int)var2);
-                                }
-                                else
-                                {
-                                    ballPos = ((int)var1, (int)var2);
-                                    previous = ballPos;
-                                    first = false;
-                                }
+                                ballPos = ((int)var1, (int)var2);
                             }
                             else if (var3 == 3)
                             {
