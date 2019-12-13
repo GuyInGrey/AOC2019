@@ -142,7 +142,7 @@ namespace AOC10
                     Console.Write('O');
                 }
 
-                Thread.Sleep(5);
+                Thread.Sleep(20);
             }
 
             Console.SetCursorPosition(0, input.Length + 2);
