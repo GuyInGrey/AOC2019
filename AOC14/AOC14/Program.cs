@@ -22,6 +22,7 @@ namespace AOC14
 
             var oreUsed = 0;
             var excess = new Dictionary<string, int>();
+            var oreOnlyReactions = new List<Reaction>();
 
             while (running)
             {
@@ -43,11 +44,7 @@ namespace AOC14
                         }
 
                         stillNeeded:;
-                        var r2 = reactions.Where(a => a.Output.Item2 == i.Item2).First();
-                        newReactions.Add(r2);
-                        quantityNeeded -= r2.Output.Item1;
-                        if (quantityNeeded > 0) { goto stillNeeded; }
-                        else if (quantityNeeded < 0)
+                        if (quantityNeeded < 0)
                         {
                             if (excess.ContainsKey(i.Item2))
                             {
@@ -57,7 +54,13 @@ namespace AOC14
                             {
                                 excess.Add(i.Item2, -quantityNeeded);
                             }
+                            goto notNeeded;
                         }
+                        var r2 = reactions.Where(a => a.Output.Item2 == i.Item2).First();
+                        newReactions.Add(r2);
+                        quantityNeeded -= r2.Output.Item1;
+                        if (quantityNeeded != 0) { goto stillNeeded; }
+                        notNeeded:;
                     }
                 }
 
@@ -66,10 +69,10 @@ namespace AOC14
                 running = neededReactions.Count > 0;
 
                 Console.WriteLine("New list of needed reactions:\n" + string.Join("\n", neededReactions));
-                Console.ReadLine();
+                //Console.ReadLine();
             }
 
-            //Console.WriteLine(neededReactions.Sum(a => a.Inputs.Sum(b => b.Item1)));
+            Console.WriteLine(neededReactions.Sum(a => a.Inputs.Sum(b => b.Item1)));
             Console.WriteLine(oreUsed);
 
             Console.Read();
