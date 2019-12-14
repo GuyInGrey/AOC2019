@@ -17,63 +17,82 @@ namespace AOC14
             //Console.WriteLine(string.Join("\n", reactions));
             Console.WriteLine("\n\nFUEL reaction: " + fuelReaction);
 
+            var oreUsed = (long)0;
+            var fuelMade = (long)0;
+
+
             var neededReactions = new List<Reaction>() { fuelReaction };
             var running = true;
 
-            var oreUsed = 0;
             var excess = new Dictionary<string, int>();
-            var oreOnlyReactions = new List<Reaction>();
 
-            while (running)
+            while (oreUsed < 1000000000000)
             {
-                var newReactions = new List<Reaction>();
-                foreach (var r in neededReactions)
+                while (running)
                 {
-                    foreach (var i in r.Inputs)
+                    var newReactions = new List<Reaction>();
+                    foreach (var r in neededReactions)
                     {
-                        if (i.Item2 == "ORE")
+                        foreach (var i in r.Inputs)
                         {
-                            oreUsed += i.Item1;
-                            continue;
-                        }
-                        var quantityNeeded = i.Item1;
+                            if (i.Item2 == "ORE")
+                            {
+                                oreUsed += i.Item1;
 
-                        if (excess.ContainsKey(i.Item2))
-                        {
-                            quantityNeeded -= excess[i.Item2];
-                        }
+                                continue;
+                            }
+                            var quantityNeeded = i.Item1;
 
-                        stillNeeded:;
-                        if (quantityNeeded < 0)
-                        {
                             if (excess.ContainsKey(i.Item2))
                             {
-                                excess[i.Item2] = -quantityNeeded;
+                                quantityNeeded -= excess[i.Item2];
+                                excess[i.Item2] = 0;
                             }
-                            else
+
+                            stillNeeded:;
+                            if (quantityNeeded < 0)
                             {
-                                excess.Add(i.Item2, -quantityNeeded);
+                                if (excess.ContainsKey(i.Item2))
+                                {
+                                    excess[i.Item2] = -quantityNeeded;
+                                }
+                                else
+                                {
+                                    excess.Add(i.Item2, -quantityNeeded);
+                                }
+                                goto notNeeded;
                             }
-                            goto notNeeded;
+                            if (quantityNeeded == 0) { goto notNeeded; }
+                            var r2 = reactions.Where(a => a.Output.Item2 == i.Item2).First();
+                            newReactions.Add(r2);
+
+                            quantityNeeded -= r2.Output.Item1;
+                            if (quantityNeeded != 0) { goto stillNeeded; }
+                            notNeeded:;
                         }
-                        var r2 = reactions.Where(a => a.Output.Item2 == i.Item2).First();
-                        newReactions.Add(r2);
-                        quantityNeeded -= r2.Output.Item1;
-                        if (quantityNeeded != 0) { goto stillNeeded; }
-                        notNeeded:;
                     }
+
+                    neededReactions = newReactions;
+
+                    running = neededReactions.Count > 0;
+
+                    a:;
+                    foreach (var e in excess)
+                    {
+                        if (e.Value == 0) { excess.Remove(e.Key); goto a; }
+                    }
+
+                    //Console.WriteLine("\n\n\nOre Used: " + oreUsed + "\nNew list of needed reactions:\n" + string.Join("\n", neededReactions) + "\n\n" + "Excess: " + string.Join(", ", excess));
+                    //Console.ReadLine();
                 }
 
-                neededReactions = newReactions;
-
-                running = neededReactions.Count > 0;
-
-                Console.WriteLine("New list of needed reactions:\n" + string.Join("\n", neededReactions));
-                //Console.ReadLine();
+                neededReactions = new List<Reaction>() { fuelReaction };
+                fuelMade++;
+                running = true;
+                Console.Title = string.Format("{0:n0}", oreUsed) + " : " + string.Format("{0:n0}", (fuelMade - 1));
             }
 
-            Console.WriteLine(neededReactions.Sum(a => a.Inputs.Sum(b => b.Item1)));
-            Console.WriteLine(oreUsed);
+            Console.WriteLine(oreUsed + " : " + (fuelMade - 1));
 
             Console.Read();
         }

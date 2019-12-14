@@ -14,6 +14,7 @@ namespace AOC12
             //Get Input
             var input = File.ReadAllText("input.txt").Split('\n').ToList();
             var planets = new List<((int, int, int), (int, int, int))>(); // Position and Velocity
+            var originalPlanets = planets.ToArray().ToList();
 
             input.ForEach(a =>
             {
@@ -24,9 +25,11 @@ namespace AOC12
                 planets.Add(((x, y, z), (0, 0, 0)));
             });
 
+            var stepCnt = (long)1;
+
             //Steps
-            var stepCnt = 1000;
-            for (var s = 0; s < stepCnt; s++)
+            var s = (long)0;
+            for (s = 0; true; s += stepCnt)
             {
                 for (var i = 0; i < planets.Count; i++)
                 {
@@ -49,8 +52,28 @@ namespace AOC12
                 {
                     planets[i] = (Add(planets[i]), planets[i].Item2);
                 }
+
+                if (stepCnt == 1)
+                {
+                    if (planets[0].Item2.Item1 == 0 && planets[1].Item2.Item1 == 0 && planets[2].Item2.Item1 == 0 && planets[3].Item2.Item1 == 0 &&
+                        planets[0].Item2.Item2 == 0 && planets[1].Item2.Item2 == 0)
+                    {
+                        stepCnt = s;
+                    }
+                }
+
+                if (s % 100000 == 0)
+                {
+                    Console.Title = string.Format("{0:n0}", s) + " : " + stepCnt;
+                }
+
+                if (planets.All(originalPlanets.Contains))
+                {
+                    goto a;
+                }
             }
 
+            a:;
             var energy = 0;
             for (var i = 0; i < planets.Count; i++)
             {
@@ -58,7 +81,7 @@ namespace AOC12
                 energy += Sum(Abs(p1.Item1)) * Sum(Abs(p1.Item2));
             }
 
-            Console.WriteLine("Energy: " + energy);
+            Console.WriteLine(s);
             Console.Read();
         }
 
