@@ -12,7 +12,7 @@ namespace AOC13
     {
         static void Main()
         {
-            var debug = true;
+            var debug = false;
             var times = new List<long>();
             var score = (long)0;
 
